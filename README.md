@@ -2,11 +2,15 @@
 
 Fork of msi-ec (https://github.com/BeardOverflow/msi-ec) with support for MSI Modern 15 A11M (Business series)
 
+I have also created a [pattern script for ImHex](msi_modern_15_a11m_ec.hexpat). It contains annotations for all useful memory addresses discovered on the Modern 15.
+
+![hex pattern screenshot](https://user-images.githubusercontent.com/38386967/193131500-8b0dd17d-0c7b-4eef-9316-289640bba345.png)
+
+
+
 ## Disclaimer
 
 This driver might not work on other laptops produced by MSI. Use it at your own risk, I am not responsible for any damage suffered.
-
-Also, and until future enhancements, no DMI data is used to identify your laptop model. Check the constants.h file before using.
 
 ## Installation
 
