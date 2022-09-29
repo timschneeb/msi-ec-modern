@@ -1,4 +1,6 @@
-# Embedded Controller for MSI laptops
+# Embedded Controller for MSI Modern laptops
+
+Fork of msi-ec (https://github.com/BeardOverflow/msi-ec) with support for MSI Modern 15 A11M (Business series)
 
 ## Disclaimer
 
@@ -19,6 +21,15 @@ Also, and until future enhancements, no DMI data is used to identify your laptop
 ## Usage
 
 This driver exports a few files in its own platform device, msi-ec, and is available to userspace under:
+
+- `/sys/devices/platform/msi-ec/preset`
+  - Description: This entry allows setting a preset (also known as user scenario in MSI Center Pro).
+  - Access: Read, Write
+  - Valid values:
+    - super_battery: Battery saving mode
+    - silent: Prefer silent fans
+    - balanced: Balanced power profile
+    - high_performance: Best performance
 
 - `/sys/devices/platform/msi-ec/webcam`
   - Description: This entry allows enabling the integrated webcam.
@@ -41,7 +52,7 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
     - left: windows key goes to the left, function key goes to the right
     - right: windows key goes to the right, function key goes to the left
 
-- `/sys/devices/platform/msi-ec/battery_mode`
+- `/sys/devices/platform/msi-ec/battery_charge_mode`
   - Description: This entry allows changing the battery mode for health purposes.
   - Access: Read, Write
   - Valid values:
@@ -57,12 +68,11 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
     - off: cooler boost function is disabled
 
 - `/sys/devices/platform/msi-ec/shift_mode`
-  - Description: This entry allows switching the shift mode. It provides a set of profiles for gaining CPU & GPU overclock/underclock.
+  - Description: This entry allows switching the shift mode.
   - Access: Read, Write
   - Valid values:
-    - turbo: over-voltage and over-clock for the CPU & GPU, aka overcloking mode
-    - sport: full clock frequency for the CPU & GPU, aka default desktop mode
-    - comfort: dynamic clock frequency for the CPU & GPU, aka power balanced mode
+    - overclock: maximum clock frequency
+    - balanced: dynamic clock frequency for the CPU & GPU, aka power balanced mode
     - eco: low clock frequency for the CPU & GPU, aka power saving mode
     - off: operating system decides
 
@@ -71,7 +81,7 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
   - Access: Read, Write
   - Valid values:
     - auto: fan speed adjusts automatically
-    - basic: fixed 1-level fan speed for CPU/GPU (percent)
+    - silent: fan speed remains as low as possible
     - advanced: fixed 6-levels fan speed for CPU/GPU (percent)
 
 - `/sys/devices/platform/msi-ec/fw_version`
@@ -84,6 +94,20 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
   - Access: Read
   - Valid values: Represented as string
 
+- `/sys/devices/platform/msi-ec/ac_connected`
+  - Description: This entry reports whether the power adapter is connected.
+  - Access: Read
+  - Valid values: 0 - 1
+    - 0: Connected
+    - 1: Not connected
+    
+- `/sys/devices/platform/msi-ec/lid_open`
+  - Description: This entry reports whether the lid is opened.
+  - Access: Read
+  - Valid values: 0 - 1
+    - 0: Closed
+    - 1: Open
+
 - `/sys/devices/platform/msi-ec/cpu/realtime_temperature`
   - Description: This entry reports the current cpu temperature.
   - Access: Read
@@ -92,12 +116,7 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
 - `/sys/devices/platform/msi-ec/cpu/realtime_fan_speed`
   - Description: This entry reports the current cpu fan speed.
   - Access: Read
-  - Valid values: 0 - 100 (percent)
-
-- `/sys/devices/platform/msi-ec/cpu/basic_fan_speed`
-  - Description: This entry allows changing the cpu fan speed.
-  - Access: Read, Write
-  - Valid values: 0 - 100 (percent)
+  - Valid values: 0 - 150 (percent)
 
 - `/sys/devices/platform/msi-ec/gpu/realtime_temperature`
   - Description: This entry reports the current gpu temperature.
@@ -107,25 +126,7 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
 - `/sys/devices/platform/msi-ec/gpu/realtime_fan_speed`
   - Description: This entry reports the current gpu fan speed.
   - Access: Read
-  - Valid values: 0 - 100 (percent)
-
-In addition to these platform device attributes the driver registers itself in the Linux power_supply subsystem (Documentation/ABI/testing/sysfs-class-power) and is available to userspace under:
-
-- `/sys/class/power_supply/<supply_name>/charge_control_start_threshold`
-  - Description: Represents a battery percentage level, below which charging will begin.
-  - Access: Read, Write
-  - Valid values: 0 - 100 (percent)
-    - 50: when min battery mode is configured
-    - 70: when medium battery mode is configured
-    - 90: when max battery mode is configured
-
-- `/sys/class/power_supply/<supply_name>/charge_control_end_threshold`
-  - Description: Represents a battery percentage level, above which charging will stop.
-  - Access: Read, Write
-  - Valid values: 0 - 100 (percent)
-    - 60: when min battery mode is configured
-    - 80: when medium battery mode is configured
-    - 100: when max battery mode is configured
+  - Valid values: 0 - 150 (percent)
 
 Led subsystem allows us to control the leds on the laptop including the keyboard backlight
 
@@ -148,4 +149,7 @@ Led subsystem allows us to control the leds on the laptop including the keyboard
 
 ## List of tested laptops:
 
-- MSI GF75 Thin 9SC (17F2EMS1.106)
+- MSI Modern 15 A11M (1552EMS1.118)
+
+## Credits
+ * [msi-ec](https://github.com/BeardOverflow/msi-ec)
